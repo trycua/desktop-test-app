@@ -20,7 +20,7 @@ jobs:
             target: aarch64-apple-darwin
             artifact: desktop-test-app-macos-arm64
             ext: ""
-          - platform: macos-13
+          - platform: macos-latest
             target: x86_64-apple-darwin
             artifact: desktop-test-app-macos-x86_64
             ext: ""
