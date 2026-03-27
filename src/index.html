@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Desktop Test App</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: monospace; background: #1a1a1a; color: #e0e0e0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+    h1 { font-size: 14px; padding: 6px 12px; background: #2a2a2a; border-bottom: 1px solid #333; color: #aaa; }
+    #panels { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; flex: 1; overflow: hidden; }
+    .panel { border: 1px solid #333; display: flex; flex-direction: column; overflow: hidden; }
+    .panel h2 { font-size: 11px; padding: 4px 8px; background: #2a2a2a; color: #888; border-bottom: 1px solid #333; flex-shrink: 0; }
+    .log { flex: 1; overflow-y: auto; font-size: 11px; padding: 4px; }
+    .log-entry { padding: 2px 4px; border-bottom: 1px solid #222; }
+    .log-entry .etype { color: #7ec8e3; min-width: 160px; display: inline-block; }
+    .log-entry .coords { color: #b5cea8; }
+    .log-entry .detail { color: #ce9178; }
+    #text-input { width: 100%; padding: 6px; background: #111; border: none; border-bottom: 1px solid #333; color: #fff; font-family: monospace; font-size: 12px; outline: none; flex-shrink: 0; }
+    #drag-target { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #555; border: 2px dashed #333; margin: 8px; border-radius: 4px; transition: all 0.1s; }
+    #drag-target.over { border-color: #7ec8e3; color: #7ec8e3; }
+    #drag-target.dropped { border-color: #4ec94e; color: #4ec94e; }
+    #clipboard-content { flex: 1; padding: 8px; font-size: 11px; color: #ce9178; overflow-y: auto; word-break: break-all; }
+    #reset-btn { margin: 8px; padding: 4px 12px; background: #333; border: 1px solid #555; color: #ccc; cursor: pointer; font-family: monospace; font-size: 11px; border-radius: 3px; }
+    #reset-btn:hover { background: #444; }
+  </style>
+</head>
+<body>
+  <h1>Desktop Test App — HTTP API on port 6769 — <span id="status">starting…</span></h1>
+  <div id="panels">
+    <div class="panel">
+      <h2>Mouse Events</h2>
+      <div class="log" id="mouse-log"></div>
+    </div>
+    <div class="panel">
+      <h2>Keyboard Events</h2>
+      <div class="log" id="key-log"></div>
+    </div>
+    <div class="panel">
+      <h2>Clipboard / Text Input</h2>
+      <input id="text-input" placeholder="type here to verify sb.keyboard.type()" autocomplete="off" spellcheck="false" />
+      <div id="clipboard-content">clipboard: —</div>
+      <button id="reset-btn">Reset Events</button>
+    </div>
+    <div class="panel">
+      <h2>Drag Target</h2>
+      <div id="drag-target">drag here</div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

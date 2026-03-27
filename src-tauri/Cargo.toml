@@ -1,0 +1,28 @@
+[package]
+name = "desktop-test-app"
+version = "0.1.0"
+description = "Desktop input event logger for sandbox interface testing"
+authors = ["TryCua"]
+edition = "2021"
+
+[lib]
+name = "desktop_test_app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+axum = "0.8"
+tokio = { version = "1", features = ["full"] }
+arboard = "3"
+std-semaphore = "0.1"
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1
