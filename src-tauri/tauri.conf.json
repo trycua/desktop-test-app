@@ -8,7 +8,15 @@
   },
   "app": {
     "withGlobalTauri": true,
-    "windows": [],
+    "windows": [
+      {
+        "title": "Desktop Test App",
+        "width": 1000,
+        "height": 700,
+        "resizable": true,
+        "label": "main"
+      }
+    ],
     "security": {
       "csp": null,
       "dangerousDisableAssetCspModification": true

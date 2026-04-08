@@ -4,7 +4,6 @@ mod state;
 
 use state::{AppState, Event};
 use std::sync::{Arc, Mutex};
-use tauri::WebviewUrl;
 
 /// Called from JS for every input event captured in the webview.
 #[tauri::command]
@@ -50,21 +49,18 @@ pub fn run() {
     // bundled index.html.  When unset, behaves as before (event-logger UI).
     // Useful for proxy/MITM tests: set CUA_LOAD_URL=https://example.com.
     let url_env = std::env::var("CUA_LOAD_URL").ok();
-    let webview_url = match &url_env {
-        Some(u) => WebviewUrl::External(u.parse().expect("CUA_LOAD_URL is not a valid URL")),
-        None => WebviewUrl::App("index.html".into()),
-    };
 
     tauri::Builder::default()
         .manage(shared)
         .invoke_handler(tauri::generate_handler![log_event, set_screen_size])
         .setup(move |app| {
-            tauri::WebviewWindowBuilder::new(app, "main", webview_url)
-                .title("Desktop Test App")
-                .width(1000)
-                .height(700)
-                .resizable(true)
-                .build()?;
+            if let Some(url_str) = url_env {
+                let win = app
+                    .get_webview_window("main")
+                    .expect("main window must exist");
+                let url: tauri::Url = url_str.parse().expect("CUA_LOAD_URL is not a valid URL");
+                win.navigate(url).ok();
+            }
             Ok(())
         })
         .run(tauri::generate_context!())
