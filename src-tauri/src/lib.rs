@@ -4,6 +4,7 @@ mod state;
 
 use state::{AppState, Event};
 use std::sync::{Arc, Mutex};
+use tauri::Manager;
 
 /// Called from JS for every input event captured in the webview.
 #[tauri::command]
