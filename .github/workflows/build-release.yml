@@ -76,17 +76,19 @@ jobs:
 
       # ── Collect the binary/bundle ──────────────────────────────────────
 
-      - name: Collect artifact (Linux)
+      - name: Collect artifact (Linux binary + .deb)
         if: matrix.platform == 'ubuntu-latest'
         run: |
-          # Grab AppImage — smallest self-contained option
+          # AppImage — self-contained, no install needed
           APPIMAGE=$(find src-tauri/target/${{ matrix.target }}/release/bundle/appimage -name "*.AppImage" | head -1)
-          cp "$APPIMAGE" "${{ matrix.artifact }}"
+          cp "$APPIMAGE" "${{ matrix.artifact }}.AppImage"
+          # .deb — for dpkg -i install in sandbox tests
+          DEB=$(find src-tauri/target/${{ matrix.target }}/release/bundle/deb -name "*.deb" | head -1)
+          cp "$DEB" "desktop-test-app_amd64.deb"
 
       - name: Collect artifact (macOS)
         if: startsWith(matrix.platform, 'macos')
         run: |
-          # Grab the raw binary (no .app bundle needed for headless sandbox injection)
           cp src-tauri/target/${{ matrix.target }}/release/desktop-test-app \
              ${{ matrix.artifact }}
 
@@ -97,6 +99,21 @@ jobs:
                     "${{ matrix.artifact }}${{ matrix.ext }}"
 
       - uses: actions/upload-artifact@v4
+        if: matrix.platform == 'ubuntu-latest'
+        with:
+          name: ${{ matrix.artifact }}-appimage
+          path: ${{ matrix.artifact }}.AppImage
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        if: matrix.platform == 'ubuntu-latest'
+        with:
+          name: desktop-test-app-deb
+          path: desktop-test-app_amd64.deb
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        if: "!startsWith(matrix.platform, 'ubuntu')"
         with:
           name: ${{ matrix.artifact }}
           path: ${{ matrix.artifact }}${{ matrix.ext }}
